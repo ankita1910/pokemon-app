@@ -33,25 +33,17 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request)
-            .then (matchedResponse => {
-                if (matchedResponse) {
-                    console.log('Cache hit! Fetching response from cache', event.request.url)
-                    return matchedResponse
-                }
-
-                var fetchRequest = event.request.clone()
-                return fetch(fetchRequest).then (response => {
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
+        caches.open('pokemon-cache')
+            .then (cache => {
+                return cache.match(event.request).then (response => {
+                    if (response) {
+                        console.log('Cache hit! Fetching response from cache', event.request.url)
                         return response
                     }
-
-                    let responseToCache = response.clone()
-                    caches.open('pokemon-cache')
-                        .then (cache => {
-                            cache.put(event.request, responseToCache)
-                        })
-                    return response
+                    fetch(event.request).then (response => {
+                        cache.put(event.request, response.clone())
+                        return response
+                    })
                 })
             })
     )
