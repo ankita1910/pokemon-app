@@ -71,19 +71,25 @@
     }
 
     function renderBerriesDesc (data) {
+
+        let staleBerriesNode = document.getElementById('berries-desc')
+        if (staleBerriesNode) {
+            staleBerriesNode.remove()
+        }
+
         let berriesDesc = ''
 
         berriesDesc += "<table>"
 
         data && Object.keys(data).map (key => {
-            let keyType = knowType(key)
+            let keyType = knowType(data[key])
             if (keyType === 'string' || keyType === 'number') {
                 berriesDesc += constructTableRow(key, data[key])
             }
         })
         berriesDesc += "</table>"
 
-        let berriesDescContainer = createNode('div', berriesDesc, { class: 'berries-desc' })
+        let berriesDescContainer = createNode('div', berriesDesc, { id: 'berries-desc' })
         appendToParent(null, berriesDescContainer)
     }
 

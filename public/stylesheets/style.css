@@ -34,7 +34,7 @@ body {
     cursor: pointer;
 }
 
-.berries-desc {
+#berries-desc {
     margin-top: 40px;
 }
 
